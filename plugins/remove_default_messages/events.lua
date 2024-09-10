@@ -15,20 +15,17 @@ end)
 
 AddEventHandler("OnUserMessageSend", function(event, um, isreliable)
     local user = GetUserMessage(um)
-    local umname = user:GetMessageName()
-
-    if config:Fetch("remove_default_messages.RemoveBlood") then
-        if umname:find("CMsgTEBloodStream") or umname:find("CMsgTEWorldDecal") then 
-            user:ClearClients()
-	    return EventResult.Stop 
-	end
+    local msgid = user:GetMessageID()
+    
+    if (msgid == 418 or msgid == 411) and config:Fetch("remove_default_messages.RemoveBlood") then
+        return EventResult.Stop
     end
-    if umname:find("TextMsg") then
+
+    if msgid == 124 then
         local msg = user:GetRepeatedString("param", 0)
         if filterMessages[msg] then
-	    user:ClearClients()
 	    return EventResult.Stop
-	end
+        end
     end
 end)
 
